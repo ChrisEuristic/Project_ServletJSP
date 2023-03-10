@@ -15,6 +15,10 @@ public class Person {
 	public void setAge(int age) {
 		this.age = age;
 	}
+	
+	public Person() {
+		// TODO Auto-generated constructor stub
+	}
 	public Person(String name, int age) {
 		super();
 		this.name = name;
