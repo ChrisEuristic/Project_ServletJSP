@@ -21,14 +21,14 @@ dto.setId(session.getAttribute("UserId").toString());
 
 // DAO 객체를 통해 DB에 DTO 저장
 BoardDAO dao = new BoardDAO(application);
-//int iResult = dao.insertWrite(dto); // 원래 코드
+int iResult = dao.insertWrite(dto); // 원래 코드
 
 // 더미 데이터 코드
-int iResult = 0;
-for(int i = 1; i <= 100; i++){
-	dto.setTitle(title + "-" + i);
-	iResult = dao.insertWrite(dto);
-}
+// int iResult = 0;
+// for(int i = 1; i <= 100; i++){
+// 	dto.setTitle(title + "-" + i);
+// 	iResult = dao.insertWrite(dto);
+// }
 // 여기까지 더미 데이터 코드
 
 dao.close();

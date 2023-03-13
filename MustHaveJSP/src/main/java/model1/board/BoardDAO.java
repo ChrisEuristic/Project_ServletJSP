@@ -78,15 +78,60 @@ public class BoardDAO extends JDBConnect {
 	public List<BoardDTO> selectListPage(Map <String, Object> map){
 		List<BoardDTO> bbs = new Vector<BoardDTO>(); // 결과(게시물 목록)를 담을 변수
 		
+		// *****************************************
+		// Oracle Query
 		// 쿼리문 템플릿
-		String query = " SELECT * FROM ( SELECT TB.*, FROM ( SELECT * FROM BOARD ";
+//		String query = " SELECT * FROM ( SELECT TB.*, FROM ( SELECT * FROM BOARD ";
+//		
+//		// 검색 조건 추가
+//		if (map.get("searchWord") != null) {
+//			query += " WHERE " + map.get("searchField") + " LIKE '%" + map.get("searchWord") + "%' ";
+//		}
+//		
+//		query += " ORDER BY NUM DESC ) TB ) WHERE RNUM BETWEEN ? AND ?";
+		
+		// *****************************************
+		// MySQL Query Start
+		
+		String query = "SELECT * FROM BOARD ";
 		
 		// 검색 조건 추가
-		if (map.get("searchWord") != null) {
-			
+		if(map.get("searchWord") != null) {
+			query += " WHERE " + map.get("searchField") + " LIKE '%" + map.get("searchWord") + "%' ";
 		}
+		query += " ORDER BY NUM DESC LIMIT ?,?";
+		// *****************************************
+		// MySQL Query End		
 		
-		query += " ORDER BY NUM DESC ) TB ) WHERE "; // 만들다 만 자리
+		try {
+			// 쿼리문 완성
+			psmt = con.prepareStatement(query);
+//			psmt.setString(1, map.get("start").toString()); // Oracle
+//			psmt.setString(2, map.get("end").toString());	// Oracle
+			psmt.setInt(1, (int)map.get("start")-1);
+			psmt.setInt(2, (int)map.get("pageSize"));
+			
+			// 쿼리문 실행
+			rs = psmt.executeQuery();
+			
+			while(rs.next()) {
+				// 한 행(게시물 하나)의 데이터를 DTO에 저장
+				BoardDTO dto = new BoardDTO();
+				dto.setNum(rs.getString("num"));
+				dto.setTitle(rs.getString("title"));
+				dto.setContent(rs.getString("content"));
+				dto.setPostdate(rs.getDate("postdate"));
+				dto.setId(rs.getString("id"));
+				dto.setVisitcount(rs.getString("visitcount"));
+				
+				// 반환할 결과 목록에 게시물 추가
+				bbs.add(dto);
+			}
+			
+		} catch(Exception e) {
+			System.out.println("게시물 조회 중 예외 발생");
+			e.printStackTrace();
+		}
 		
 		// 목록 반환
 		return bbs;

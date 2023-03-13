@@ -32,6 +32,16 @@
   	<param-value>jdbc:mysql://localhost:3306/world</param-value>
   </context-param>
   
+  <context-param>
+  	<param-name>POSTS_PER_PAGE</param-name>
+  	<param-value>10</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>POSTS_PER_BLOCK</param-name>
+  	<param-value>5</param-value>
+  </context-param>
+  
+  
   <session-config>
   	<session-timeout>5</session-timeout>
   </session-config>
