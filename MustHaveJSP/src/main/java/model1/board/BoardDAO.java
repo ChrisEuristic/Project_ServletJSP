@@ -1,13 +1,12 @@
 package model1.board;
 
+import common.JDBConnect;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
 
 import javax.servlet.ServletContext;
-
-import common.JDBConnect;
 
 public class BoardDAO extends JDBConnect {
 	public BoardDAO(ServletContext application) {
@@ -272,4 +271,42 @@ public class BoardDAO extends JDBConnect {
 		}
 		return result;
 	}
+	
+	
+	/***********************EL 실습용 함수******************************/
+	// 검색 조건에 맞는 게시물 목록을 반환합니다(페이징 기능 지원).
+		public List<BoardDTO> selectListTemp(){
+			List<BoardDTO> bbs = new Vector<BoardDTO>(); // 결과(게시물 목록)를 담을 변수
+			
+			String query = "SELECT * FROM BOARD";		
+			
+			try {
+				// 쿼리문 완성
+				psmt = con.prepareStatement(query);
+				
+				// 쿼리문 실행
+				rs = psmt.executeQuery();
+				
+				while(rs.next()) {
+					// 한 행(게시물 하나)의 데이터를 DTO에 저장
+					BoardDTO dto = new BoardDTO();
+					dto.setNum(rs.getString("num"));
+					dto.setTitle(rs.getString("title"));
+					dto.setContent(rs.getString("content"));
+					dto.setPostdate(rs.getDate("postdate"));
+					dto.setId(rs.getString("id"));
+					dto.setVisitcount(rs.getString("visitcount"));
+					
+					// 반환할 결과 목록에 게시물 추가
+					bbs.add(dto);
+				}
+				
+			} catch(Exception e) {
+				System.out.println("게시물 조회 중 예외 발생");
+				e.printStackTrace();
+			}
+			
+			// 목록 반환
+			return bbs;
+		}
 }
